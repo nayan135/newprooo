@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-exports.handler = async(event, context) => {
+exports.handler = async (event, context) => {
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
