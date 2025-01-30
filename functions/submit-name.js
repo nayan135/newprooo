@@ -7,71 +7,71 @@ const EMAIL = process.env.EMAIL;
 
 let isConnected = false;
 
-const connectToDatabase = async() => {
-    if (isConnected) {
-        return;
-    }
-    await mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-    isConnected = true;
+const connectToDatabase = async () => {
+	if (isConnected) {
+		return;
+	}
+	await mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+	isConnected = true;
 };
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    shortId: String,
-    date: { type: Date, default: Date.now }
+	name: String,
+	email: String,
+	shortId: String,
+	date: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
 
-exports.handler = async(event, context) => {
-    context.callbackWaitsForEmptyEventLoop = false;
+exports.handler = async (event, context) => {
+	context.callbackWaitsForEmptyEventLoop = false;
 
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            body: 'Method Not Allowed',
-        };
-    }
+	if (event.httpMethod !== 'POST') {
+		return {
+			statusCode: 405,
+			body: 'Method Not Allowed',
+		};
+	}
 
-    try {
-        await connectToDatabase();
+	try {
+		await connectToDatabase();
 
-        const { name, email } = JSON.parse(event.body);
-        const shortId = shortid.generate();
-        const newUser = new User({ name, email, shortId });
-        await newUser.save();
+		const { name, email } = JSON.parse(event.body);
+		const shortId = shortid.generate();
+		const newUser = new User({ name, email, shortId });
+		await newUser.save();
 
-        // Send email notification to the first user
-        const firstUser = await User.findOne({}, {}, { sort: { 'date': 1 } });
-        if (firstUser) {
-            const request = mailjet.post("send", { 'version': 'v3.1' }).request({
-                "Messages": [{
-                    "From": {
-                        "Email": EMAIL,
-                        "Name": "Your Name"
-                    },
-                    "To": [{
-                        "Email": firstUser.email,
-                        "Name": firstUser.name
-                    }],
-                    "Subject": "New User Notification",
-                    "TextPart": `Hello ${firstUser.name}, a new user named ${name} has joined.`,
-                    "HTMLPart": `<h3>Hello ${firstUser.name},</h3><p>A new user named ${name} has joined.</p>`
-                }]
-            });
-            await request;
-        }
+		// Send email notification to the first user
+		const firstUser = await User.findOne({}, {}, { sort: { 'date': 1 } });
+		if (firstUser) {
+			const request = mailjet.post("send", { 'version': 'v3.1' }).request({
+				"Messages": [{
+					"From": {
+						"Email": EMAIL,
+						"Name": "Your Name"
+					},
+					"To": [{
+						"Email": firstUser.email,
+						"Name": firstUser.name
+					}],
+					"Subject": "New User Notification",
+					"TextPart": `Hello ${firstUser.name}, a new user named ${name} has joined.`,
+					"HTMLPart": `<h3>Hello ${firstUser.name},</h3><p>A new user named ${name} has joined.</p>`
+				}]
+			});
+			await request;
+		}
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ shortId }),
-        };
-    } catch (err) {
-        console.error(err);
-        return {
-            statusCode: 500,
-            body: 'Internal Server Error',
-        };
-    }
+		return {
+			statusCode: 200,
+			body: JSON.stringify({ shortId }),
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			statusCode: 500,
+			body: 'Internal Server Error',
+		};
+	}
 };
