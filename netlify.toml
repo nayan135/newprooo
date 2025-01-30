@@ -8,6 +8,8 @@
   to = "/index.html"
   status = 200
 
-
 [functions]
-  timeout = 20
+  directory = "functions"
+
+  [functions.timeout]
+  duration = "20s"
