@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main" id="main">
+        testtt
+        <h1>Enter your name and email</h1>
+        <form id="user-form">
+            <input type="text" name="name" id="name" placeholder="Enter your name" required>
+            <input type="email" name="email" id="email" placeholder="Enter your email" required>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="link-container" style="display:none;">
+            <p>Here is your link:</p>
+            <input type="text" id="generated-link" readonly>
+            <button id="copy-button">Copy</button>
+        </div>
+
+    </div>
+    <div class="container" id="container" style="display:none;">
+        <h1>FOR</h1>
+        <h1 id="user-name"></h1>
+        <button type="button" class="button" id="button">CLICK</button>
+    </div>
+    <div class="reveal" id="reveal" style="display:none;">
+        <div class="left">
+            <h2>Will you BE my Valentine?</h2>
+            <button type="button">YES</button>
+            <button type="button">MAYBE</button>
+            <button type="button">MAYBE NO</button>
+        </div>
+        <div class="right">
+            <svg id="rose" width="1047" height="980" viewBox="0 0 1047 980" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <!-- SVG paths here -->
+            </svg>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
