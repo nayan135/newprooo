@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/submit-name', async(req, res) => {
+app.post('/submit-name', async (req, res) => {
     try {
         const userName = req.body.name;
         const userEmail = req.body.email;
@@ -61,7 +61,38 @@ app.post('/submit-name', async(req, res) => {
     }
 });
 
-app.get('/main', async(req, res) => {
+app.post('/submit-response', async (req, res) => {
+    try {
+        const { shortId, response } = req.body;
+        const user = await User.findOne({ shortId: shortId });
+        if (user) {
+            const request = mailjet.post("send", { 'version': 'v3.1' }).request({
+                "Messages": [{
+                    "From": {
+                        "Email": "nayan135@night-owls.tech",
+                        "Name": "Your Name"
+                    },
+                    "To": [{
+                        "Email": user.email,
+                        "Name": user.name
+                    }],
+                    "Subject": "Valentine Response",
+                    "TextPart": `Hello ${user.name}, your response is: ${response}.`,
+                    "HTMLPart": `<h3>Hello ${user.name},</h3><p>Your response is: ${response}.</p>`
+                }]
+            });
+            await request;
+            res.sendStatus(200);
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/main', async (req, res) => {
     try {
         const shortId = req.query.shortId;
         const user = await User.findOne({ shortId: shortId });
@@ -76,7 +107,7 @@ app.get('/main', async(req, res) => {
     }
 });
 
-app.get('/get-name', async(req, res) => {
+app.get('/get-name', async (req, res) => {
     try {
         const shortId = req.query.shortId;
         const user = await User.findOne({ shortId: shortId });

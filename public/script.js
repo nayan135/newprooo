@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const shortId = urlParams.get('shortId');
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const generatedLink = document.getElementById('generated-link');
     const copyButton = document.getElementById('copy-button');
 
-    form.addEventListener('submit', async function (event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
-    copyButton.addEventListener('click', function () {
+    copyButton.addEventListener('click', function() {
         generatedLink.select();
         document.execCommand('copy');
         alert('Link copied to clipboard');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const rose = document.getElementById('rose');
     const paths = rose.querySelectorAll('path');
 
-    button.addEventListener('click', function () {
+    button.addEventListener('click', function() {
         container.style.display = 'none';
         reveal.style.display = 'flex';
         animateRose();
@@ -70,4 +70,23 @@ document.addEventListener('DOMContentLoaded', async function () {
             path.style.animation = `grow 2s ease-in-out forwards ${index * 0.2}s`;
         });
     }
+
+    const responseForm = document.getElementById('response-form');
+    responseForm.addEventListener('click', async function(event) {
+        if (event.target.classList.contains('response-button')) {
+            const response = event.target.getAttribute('data-response');
+            try {
+                await fetch('/submit-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ shortId, response })
+                });
+                alert('Response sent!');
+            } catch (err) {
+                console.error('Error submitting response:', err);
+            }
+        }
+    });
 });
