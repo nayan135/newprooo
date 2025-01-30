@@ -1,10 +1,10 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const shortId = urlParams.get('shortId');
 
     if (shortId) {
         try {
-            const response = await fetch(`/get-name?shortId=${shortId}`);
+            const response = await fetch(`/.netlify/functions/get-name?shortId=${shortId}`);
             const data = await response.json();
             if (data.name) {
                 document.getElementById('main').style.display = 'none';
@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     const generatedLink = document.getElementById('generated-link');
     const copyButton = document.getElementById('copy-button');
 
-    form.addEventListener('submit', async function(event) {
+    form.addEventListener('submit', async function (event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
 
         try {
-            const response = await fetch('/submit-name', {
+            const response = await fetch('/.netlify/functions/submit-name', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    copyButton.addEventListener('click', function() {
+    copyButton.addEventListener('click', function () {
         generatedLink.select();
         document.execCommand('copy');
         alert('Link copied to clipboard');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const rose = document.getElementById('rose');
     const paths = rose.querySelectorAll('path');
 
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         container.style.display = 'none';
         reveal.style.display = 'flex';
         animateRose();
@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     const responseForm = document.getElementById('response-form');
-    responseForm.addEventListener('click', async function(event) {
+    responseForm.addEventListener('click', async function (event) {
         if (event.target.classList.contains('response-button')) {
             const response = event.target.getAttribute('data-response');
             try {
-                await fetch('/submit-response', {
+                await fetch('/.netlify/functions/submit-response', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
