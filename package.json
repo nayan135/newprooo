@@ -7,6 +7,7 @@
         "build": "echo 'No build step required'"
     },
     "dependencies": {
+        "dotenv": "^16.4.7",
         "mongoose": "^5.12.3",
         "netlify": "^13.3.3",
         "node-mailjet": "^3.3.1",

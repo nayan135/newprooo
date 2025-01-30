@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const
+    mongoose = require('mongoose');
 const mailjet = require('node-mailjet').apiConnect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY);
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -29,7 +30,7 @@ exports.handler = async(event, context) => {
             const request = mailjet.post("send", { 'version': 'v3.1' }).request({
                 "Messages": [{
                     "From": {
-                        "Email": "your-email@example.com",
+                        "Email": process.env.EMAIL,
                         "Name": "Your Name"
                     },
                     "To": [{
