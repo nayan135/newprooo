@@ -10,12 +10,21 @@
 
 <body>
     <div class="main" id="main">
-        <h1>Enter your name and email</h1>
-        <form id="user-form">
-            <input type="text" name="name" id="name" placeholder="Enter your name" required>
-            <input type="email" name="email" id="email" placeholder="Enter your email" required>
-            <button type="submit">Submit</button>
-        </form>
+        <h1 class="form-title">Join Our Valentine Celebration</h1>
+        <div class="form-container">
+            <form id="user-form" class="user-form">
+                <div class="form-group">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" name="name" id="name" class="form-input" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" name="email" id="email" class="form-input" placeholder="Enter your email"
+                        required>
+                </div>
+                <button type="submit" class="form-button">Submit</button>
+            </form>
+        </div>
         <div id="link-container" style="display:none;">
             <p>Here is your link:</p>
             <input type="text" id="generated-link" readonly>

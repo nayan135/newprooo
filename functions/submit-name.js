@@ -3,6 +3,7 @@ const shortid = require('shortid');
 const mailjet = require('node-mailjet').apiConnect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY);
 
 const MONGODB_URI = process.env.MONGODB_URI;
+const EMAIL = process.env.EMAIL;
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-exports.handler = async (event, context) => {
+exports.handler = async(event, context) => {
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -35,7 +36,7 @@ exports.handler = async (event, context) => {
             const request = mailjet.post("send", { 'version': 'v3.1' }).request({
                 "Messages": [{
                     "From": {
-                        "Email": "your-email@example.com",
+                        "Email": EMAIL,
                         "Name": "Your Name"
                     },
                     "To": [{
