@@ -1,10 +1,18 @@
-const
-    mongoose = require('mongoose');
-const mailjet = require('node-mailjet').apiConnect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY);
+require('dotenv').config();
+const mongoose = require('mongoose');
+const mailjet = require('node-mailjet').connect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY);
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+let isConnected = false;
+
+const connectToDatabase = async () => {
+    if (isConnected) {
+        return;
+    }
+    await mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    isConnected = true;
+};
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -15,7 +23,9 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-exports.handler = async(event, context) => {
+exports.handler = async (event, context) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -24,6 +34,8 @@ exports.handler = async(event, context) => {
     }
 
     try {
+        await connectToDatabase();
+
         const { shortId, response } = JSON.parse(event.body);
         const user = await User.findOne({ shortId: shortId });
         if (user) {
