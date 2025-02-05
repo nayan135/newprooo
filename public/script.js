@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 },
                 body: JSON.stringify({ name, email })
             });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
             const data = await response.json();
             if (data.shortId) {
                 const link = `${window.location.origin}/main?shortId=${data.shortId}`;
